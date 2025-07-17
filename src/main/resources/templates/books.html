@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book List</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+    <div th:replace="fragments :: header"></div>
+    <div class="container mt-5">
+    <h1 class="text-success text-center">Books List</h1>
+    <table class="table">
+        <thead>
+            <tr class="table-danger">
+            <th>#</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Year</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="book , iterStat : ${books}" th:class="${iterStat.odd}? 'table-success' : 'table-warning'">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.isbn}"></td>
+            <td th:text="'$'+${book.price}"></td>
+            <td th:text="${book.stock}"></td>
+            <td th:text="${book.yearPublished}"></td>
+            <td>
+                <!-- <a th:href="@{/books/edit/{id}(id=${book.id})}" class="btn btn-sm btn-primary">Edit</a> -->
+                <form th:action="@{/books/delete/{id}(id=${book.id})}" method="post" style="display:inline;">
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
+                </form>
+                <!-- <a th:href="@{/books/delete/{id}(id=${book.id})}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Are you sure you want to delete this book?');">Delete</a> -->
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div th:replace="fragments :: footer"></div>
+<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
