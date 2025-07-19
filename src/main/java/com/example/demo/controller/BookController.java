@@ -30,27 +30,26 @@ public class BookController {
         return "books"; 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        return bookRepo.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/update/{id}")
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
+        Book book = bookRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+        model.addAttribute("book", book);
+        return "edit-book-form";
     }
-
-    @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookRepo.save(book);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+    
+    @PostMapping("/update/{id}")
+    public String updateBook(@PathVariable Long id, @ModelAttribute Book updatedBook, RedirectAttributes redirectAttributes) {
         Optional<Book> optionalBook = bookRepo.findById(id);
-        if (optionalBook.isEmpty()) return ResponseEntity.notFound().build();
+        if (optionalBook.isEmpty()) return "redirect:/books/all";
 
         Book book = optionalBook.get();
 
         if (updatedBook.getTitle() != null) {
              book.setTitle(updatedBook.getTitle());
+        }
+        if (updatedBook.getLanguage() != null) {
+             book.setLanguage(updatedBook.getLanguage());
         }
         if (updatedBook.getAuthor() != null) {
             book.setAuthor(updatedBook.getAuthor());
@@ -67,20 +66,49 @@ public class BookController {
         if (updatedBook.getStock() != null) {
             book.setStock(updatedBook.getStock());
         }
+        bookRepo.save(book);
+        redirectAttributes.addFlashAttribute("message", book.getLanguage() + " Book '" + book.getTitle() + "' updated successfully!");
+        return "redirect:/books/all";
+    }
 
-        return ResponseEntity.ok(bookRepo.save(book));
+    @GetMapping("/new") 
+    public String showNewBookForm(Model model) {
+        model.addAttribute("book", new Book()); 
+        return "add-book-form";
+    }
+    @PostMapping("/save")
+    public String createBook(@ModelAttribute Book book, RedirectAttributes redirectAttributes) {
+        bookRepo.save(book);
+        redirectAttributes.addFlashAttribute("message", "Book '" + book.getTitle() + "' added successfully!");
+        return "redirect:/books/all";
     }
 
     @DeleteMapping("delete/{id}")
-    public String deleteBook(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+     public ResponseEntity<Book> deleteBook(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         bookRepo.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    // --- Search Endpoints ---
+    
+    @GetMapping("/search")
+    public String searchByTitle(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+        List<Book> books = bookRepo.findByTitleContainingIgnoreCase(keyword);
+        if (books.isEmpty()) {
+            books = bookRepo.findByAuthorContainingIgnoreCase(keyword);
+        }
+        model.addAttribute("books", books);
+        model.addAttribute("keyword", keyword);
         return "books";
     }
-    // public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-    //     System.out.println("Deleting book with ID: " + id);
-    //     if (!bookRepo.existsById(id)) return ResponseEntity.notFound().build();
 
-    //     bookRepo.deleteById(id);
-    //     return ResponseEntity.noContent().build();
-    // }
+    @GetMapping("/language")
+    public String filterByLanguage(@RequestParam(value = "language", required = false) String language, Model model) {
+        List<Book> books = bookRepo.findByLanguage(language);
+        model.addAttribute("books", books);
+        model.addAttribute("selectedLanguage", language);
+        model.addAttribute("languages", List.of("English", "Hindi", "Gujarati", "Tamil", "Marathi"));
+        return "books";
+    }
+
 }

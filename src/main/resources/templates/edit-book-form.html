@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit New Book</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+    <div th:replace="fragments :: header"></div>
+    <div class="container mt-5">
+    <h1 class="text-success text-center">Edit Book</h1>
+    <form action="#" th:action="@{|/books/update/${book.id}|}" th:object="${book}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <!-- <input type="hidden" name="_method" value="put" /> -->
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" id="title" name="title" th:field="*{title}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="language" class="form-label">Language</label>
+            <input type="text" id="language" name="language" th:field="*{language}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="author" class="form-label">Author</label>
+            <input type="text" id="author" name="author" th:field="*{author}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="isbn" class="form-label">ISBN</label>
+            <input type="text" id="isbn" name="isbn" th:field="*{isbn}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" id="price" name="price" th:field="*{price}" class="form-control" step="0.01" required>
+        </div>
+        <div class="mb-3">
+            <label for="stock" class="form-label">Stock</label>
+            <input type="number" id="stock" name="stock" th:field="*{stock}" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="yearPublished" class="form-label">Year Published</label>
+            <input type="number" id="yearPublished" name="yearPublished" th:field="*{yearPublished}" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+    </div>
+    <div th:replace="fragments :: footer"></div>
+<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+    <div th:replace="fragments :: footer"></div>
+<script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

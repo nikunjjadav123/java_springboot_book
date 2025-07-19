@@ -11,6 +11,8 @@ public class Book {
 
     private String title;
 
+    private String language;
+
     private String author;
 
     private String isbn;
@@ -22,7 +24,7 @@ public class Book {
     private int stock;
 
     public Book() {}
-    public Book(String title, String author, String isbn, Integer yearPublished, Double price, Integer stock) {
+    public Book(String title, String language, String author, String isbn, Integer yearPublished, Double price, Integer stock) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
@@ -40,6 +42,14 @@ public class Book {
     public void setTitle(String title) { 
         this.title = title; 
     }
+
+    public String getLanguage() { 
+        return language; 
+    }
+    public void setLanguage(String language) { 
+        this.language = language; 
+    }
+
     public String getAuthor() { 
         return author; 
     }
