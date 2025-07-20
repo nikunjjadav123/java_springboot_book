@@ -35,10 +35,10 @@ cd java_springboot_book
 ### Configuration
 You can modify the application.properties or application.yml file in src/main/resources to customize configurations like:
 
-server.port=8080
-spring.datasource.url=jdbc:mysql://localhost:3306/db_name
-spring.datasource.username=root
-spring.datasource.password=your_password
+1. server.port=8080
+2. spring.datasource.url=jdbc:mysql://localhost:3306/db_name
+3. spring.datasource.username=root
+4. spring.datasource.password=your_password
 
 
    
